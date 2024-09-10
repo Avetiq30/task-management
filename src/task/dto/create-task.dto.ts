@@ -1,4 +1,5 @@
 import {IsString, IsNotEmpty, IsDateString, IsEnum} from 'class-validator';
+import {TaskPriority} from "../task.enum";
 
 export class CreateTaskDto {
     @IsString()
@@ -11,8 +12,9 @@ export class CreateTaskDto {
     @IsDateString()
     dueDate: Date;
 
-    @IsEnum(['LOW', 'MEDIUM', 'HIGH'], { message: 'Priority must be LOW, MEDIUM, or HIGH' })
-    priority: string;
+
+    @IsEnum(TaskPriority, { message: 'Priority must be LOW, MEDIUM, or HIGH' })
+    priority: TaskPriority;
 
 
     @IsString()

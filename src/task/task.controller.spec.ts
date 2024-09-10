@@ -3,6 +3,7 @@ import { TaskController } from './task.controller';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskPriority, TaskStatus } from './task.enum';
 
 describe('TaskController', () => {
   let controller: TaskController;
@@ -13,9 +14,9 @@ describe('TaskController', () => {
     title: 'Task 1',
     description: '',
     dueDate: new Date(),
-    priority: 'LOW',
+    priority: TaskPriority.LOW,
     assignee: 'user',
-    status: 'PENDING',
+    status: TaskStatus.PENDING,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -24,11 +25,11 @@ describe('TaskController', () => {
     title: 'New Task',
     description: 'Test',
     dueDate: new Date(),
-    priority: 'MEDIUM',
+    priority: TaskPriority.MEDIUM,
     assignee: 'user',
   };
 
-  const mockUpdateTaskDto: UpdateTaskDto = { status: 'COMPLETE' };
+  const mockUpdateTaskDto: UpdateTaskDto = { status: TaskStatus.COMPLETE };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,10 +52,12 @@ describe('TaskController', () => {
   });
 
   describe('When retrieving all tasks', () => {
-    it('should return an array of tasks', async () => {
-      jest.spyOn(service, 'findAll').mockResolvedValue([mockTask]);
+    it('should return an object with tasks and total', async () => {
+      const mockResult = { tasks: [mockTask], total: 1 };
+      jest.spyOn(service, 'findAll').mockResolvedValue(mockResult);
 
-      expect(await controller.findAll()).toEqual([mockTask]);
+      const paginationDto = { page: 1, limit: 10 };
+      expect(await controller.findAll(paginationDto)).toEqual(mockResult);
     });
   });
 

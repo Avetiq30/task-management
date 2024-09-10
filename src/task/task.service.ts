@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import {PaginationDto} from "./dto/pagination.dto";
 
 @Injectable()
 export class TaskService {
@@ -12,12 +13,18 @@ export class TaskService {
         private taskRepository: Repository<Task>,
     ) {}
 
-    async findAll(): Promise<Task[]> {
-        const tasks = await this.taskRepository.find();
-        if (!tasks.length) {
-            throw new NotFoundException('No tasks found');
-        }
-        return tasks;
+    async findAll(paginationDto: PaginationDto): Promise<{ tasks: Task[], total: number }> {
+        const { page, limit } = paginationDto;
+
+        const [tasks, total] = await this.taskRepository.findAndCount({
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+
+        return {
+            tasks,
+            total,
+        };
     }
 
     async findOne(id: number): Promise<Task> {
@@ -34,26 +41,15 @@ export class TaskService {
     }
 
     async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-        if (!createTaskDto.title || !createTaskDto.assignee) {
-            throw new BadRequestException('Title and assignee are required');
-        }
-
         const task = this.taskRepository.create(createTaskDto);
         return this.taskRepository.save(task);
     }
 
     async updateTask(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
-        if (!id) {
-            throw new BadRequestException('Invalid task ID');
-        }
 
         const task = await this.taskRepository.findOneBy({ id });
         if (!task) {
             throw new NotFoundException(`Task with ID ${id} not found`);
-        }
-
-        if (!updateTaskDto.title && !updateTaskDto.assignee && !updateTaskDto.status) {
-            throw new BadRequestException('At least one field must be updated');
         }
 
         Object.assign(task, updateTaskDto);

@@ -5,6 +5,7 @@ import { Task } from './task.entity';
 import { Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import {TaskPriority, TaskStatus} from "./task.enum";
 
 describe('TaskService', () => {
   let service: TaskService;
@@ -15,9 +16,9 @@ describe('TaskService', () => {
     title: 'Task 1',
     description: '',
     dueDate: new Date(),
-    priority: 'LOW',
+    priority: TaskPriority.LOW,
     assignee: 'user',
-    status: 'PENDING',
+    status: TaskStatus.PENDING,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -28,11 +29,11 @@ describe('TaskService', () => {
     title: 'New Task',
     description: 'Test',
     dueDate: new Date(),
-    priority: 'MEDIUM',
+    priority: TaskPriority.MEDIUM,
     assignee: 'user',
   };
 
-  const mockUpdateTaskDto: UpdateTaskDto = { status: 'COMPLETE' };
+  const mockUpdateTaskDto: UpdateTaskDto = {     status: TaskStatus.COMPLETE,};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,11 +52,16 @@ describe('TaskService', () => {
 
   describe('When retrieving all tasks', () => {
     it('should return an array of tasks', async () => {
-      jest.spyOn(repository, 'find').mockResolvedValue(mockTasks);
+      const paginationDto = { page: 1, limit: 10 };
+      const mockResult = { tasks: mockTasks, total: mockTasks.length };
 
-      expect(await service.findAll()).toEqual(mockTasks);
+      jest.spyOn(repository, 'findAndCount').mockResolvedValue([mockTasks, mockTasks.length]);
+
+      expect(await service.findAll(paginationDto)).toEqual(mockResult);
     });
   });
+
+
 
   describe('When retrieving a task by ID', () => {
     it('should return the task with the specified ID', async () => {
@@ -67,7 +73,7 @@ describe('TaskService', () => {
 
   describe('When creating a new task', () => {
     it('should create and return the new task', async () => {
-      const createdTask: Task = { ...mockCreateTaskDto, id: 1, status: 'PENDING', createdAt: new Date(), updatedAt: new Date() };
+      const createdTask: Task = { ...mockCreateTaskDto, id: 1, status: TaskStatus.PENDING, createdAt: new Date(), updatedAt: new Date() };
       jest.spyOn(repository, 'create').mockReturnValue(createdTask);
       jest.spyOn(repository, 'save').mockResolvedValue(createdTask);
 

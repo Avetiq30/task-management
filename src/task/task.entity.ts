@@ -1,4 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { TaskPriority } from './task.enum';
+import { TaskStatus } from './task.enum';
 
 @Entity()
 export class Task {
@@ -14,14 +16,14 @@ export class Task {
     @Column()
     dueDate: Date;
 
-    @Column({ type: 'enum', enum: ['LOW', 'MEDIUM', 'HIGH'], default: 'MEDIUM' })
-    priority: string;
+    @Column({ type: 'enum', enum: TaskPriority, default: TaskPriority.MEDIUM })
+    priority: TaskPriority;
 
     @Column()
     assignee: string;
 
-    @Column({ type: 'enum', enum: ['PENDING', 'IN_PROGRESS', 'COMPLETE'], default: 'PENDING' })
-    status: string;
+    @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.PENDING })
+    status: TaskStatus;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;

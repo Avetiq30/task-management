@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ReportController } from './report.controller';
-import { ReportService } from './report.service';
-import { Task } from '../task/task.entity';
+import {Test, TestingModule} from '@nestjs/testing';
+import {ReportController} from './report.controller';
+import {ReportService} from './report.service';
+import {Task} from '../task/task.entity';
+import {TaskPriority, TaskStatus} from "../task/task.enum";
 
 describe('ReportController', () => {
   let controller: ReportController;
@@ -13,9 +14,9 @@ describe('ReportController', () => {
       title: 'Task 1',
       description: '',
       dueDate: new Date(),
-      priority: 'LOW',
+      priority: TaskPriority.LOW,
       assignee: 'user',
-      status: 'COMPLETE',
+      status: TaskStatus.COMPLETE,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
