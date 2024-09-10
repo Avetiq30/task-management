@@ -55,7 +55,6 @@ describe('ReportService', () => {
       jest.spyOn(repository, 'find').mockResolvedValue(tasks);
 
       const result = await service.getAverageCompletionTime();
-      // 5 hours and 10 hours, average is 7.5 hours
       expect(result).toEqual({ averageCompletionTime: 7.5 });
     });
   });
