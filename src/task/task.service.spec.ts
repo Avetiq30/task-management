@@ -56,7 +56,6 @@ describe('TaskService', () => {
       const mockResult = { tasks: mockTasks, total: mockTasks.length };
 
       jest.spyOn(repository, 'findAndCount').mockResolvedValue([mockTasks, mockTasks.length]);
-
       expect(await service.findAll(paginationDto)).toEqual(mockResult);
     });
   });
