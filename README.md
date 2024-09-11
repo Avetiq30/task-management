@@ -22,52 +22,181 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# Task Management API
+
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This project is an API for task management developed using NestJS and PostgreSQL. The project is containerized using Docker Compose and includes unit tests.
+
+## Technology Stack
+
+- **Backend:** NestJS
+- **Database:** PostgreSQL
+- **Containerization:** Docker, Docker Compose
+- **Testing:** Jest
 
 ## Installation
 
-```bash
-$ npm install
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/task-management-api.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd task-management
+    ```
+
+3. Build and run the containers using Docker Compose:
+    ```bash
+    docker-compose up --build
+    ```
+
+   This will start the application, PostgreSQL, and other required services.
+
+## API
+
+### Tasks
+
+#### Get All Tasks
+
+**GET** `/tasks`
+
+Query Parameters:
+
+- `page` (number) - page number for pagination
+- `limit` (number) - number of tasks per page
+
+**Response:**
+
+Get Task by ID
+GET /tasks/:id
+
+Path Parameters: "id": 1,
+
+id (number) - task ID
+Response:
 ```
 
-## Running the app
+{
+    "id": 1,
+    "title": "Finish homework",
+    "description": "Finish math and science homework",
+    "dueDate": "2024-09-15T12:00:00.000Z",
+    "priority": "MEDIUM",
+    "assignee": "Alice1",
+    "status": "COMPLETE",
+    "createdAt": "2024-09-10T12:12:49.714Z",
+    "updatedAt": "2024-09-10T12:12:49.714Z"
+}
+```
+Create Task
+POST /tasks
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+Request Body:
 ```
 
-## Test
+{
+  "title": "Finish homework",
+  "description": "Finish math and science homework",
+  "dueDate": "2024-09-15T12:00:00Z",
+  "priority": "MEDIUM",
+  "assignee": "John Doe"
+}
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+Response:
 ```
 
-## Support
+{
+    "id": 1,
+    "title": "Finish homework",
+    "description": "Finish math and science homework",
+    "dueDate": "2024-09-15T12:00:00.000Z",
+    "priority": "MEDIUM",
+    "assignee": "Alice1",
+    "status": "COMPLETE",
+    "createdAt": "2024-09-10T12:12:49.714Z",
+    "updatedAt": "2024-09-10T12:12:49.714Z"
+}
+```
+Update Task
+PUT /tasks/:id
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Path Parameters:
 
-## Stay in touch
+id (number) - task ID
+Request Body:
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+{
+  "title": "Start homework",
+  "description": "Finish math and science homework",
+  "dueDate": "2024-09-15T12:00:00Z",
+  "priority": "MEDIUM",
+  "assignee": "John Doe"
+}
+```
+Response:
+```
 
-## License
+{
+    "id": 1,
+    "title": "Start homework",
+    "description": "Finish math and science homework",
+    "dueDate": "2024-09-15T12:00:00.000Z",
+    "priority": "MEDIUM",
+    "assignee": "Alice1",
+    "status": "COMPLETE",
+    "createdAt": "2024-09-10T12:12:49.714Z",
+    "updatedAt": "2024-09-10T12:12:49.714Z"
+}
+```
+Reports
+Get Completed Tasks by User
+GET /reports/completed-by-user
 
-Nest is [MIT licensed](LICENSE).
+Query Parameters:
+
+assignee (string) - user's email
+Response:
+
+```
+[
+    {
+        "id": 1,
+        "title": "Finish homework",
+        "description": "Finish math and science homework",
+        "dueDate": "2024-09-15T12:00:00.000Z",
+        "priority": "MEDIUM",
+        "assignee": "Alice1",
+        "status": "COMPLETE",
+        "createdAt": "2024-09-10T12:12:49.714Z",
+        "updatedAt": "2024-09-10T12:12:49.714Z"
+    }
+]
+```
+Get Average Completion Time
+GET /reports/average-completion-time
+
+Response:
+
+```
+{=
+{
+    "averageCompletionTime": 0
+}
+```
+Testing
+To run unit tests, use the command: npm run test
+
+docker-compose exec app npm run test
+License
+This project is licensed under the MIT License. See LICENSE for details.
+
+Contact
+For questions and suggestions, contact [your name or contact information].
+
+
+
+Replace `yourusername` and contact information with your actual details. Adjust any comman
